@@ -1,112 +1,909 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rate Your Experience</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#0a1a3a" />
+<title>Olive Hotel — Rate Your Visit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
-  body { font-family: 'Inter', sans-serif; background: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; text-align: center; }
-  .card { background: white; padding: 30px 20px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 420px; width: 90%; }
-  h1 { font-size: 22px; color: #333; margin-bottom: 10px; }
-  p { color: #666; margin-bottom: 20px; font-size: 15px; line-height: 1.5; }
-  
-  .stars { display: flex; justify-content: center; gap: 10px; font-size: 50px; cursor: pointer; margin-bottom: 10px; }
-  .star { color: #ddd; transition: 0.2s; }
-  .star:hover, .star.active { color: #FFD700; }
+  /* ============================================================
+     VAAN AI REVIEW GENERATOR — OLIVE HOTEL
+     Single file. No frameworks. Mobile-first.
+     ============================================================ */
 
-  #options-area { display: none; margin-top: 20px; text-align: left; }
-  .option-box { background: #f9f9f9; border: 2px solid #eee; padding: 15px; border-radius: 8px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; font-size: 14px; color: #444; }
-  .option-box.selected { border-color: #4285F4; background: #eef4ff; }
+  :root {
+    --navy-deep: #071229;
+    --navy: #0a1a3a;
+    --navy-mid: #0f2149;
+    --navy-soft: #142a5c;
+    --gold: #FFD700;
+    --gold-soft: #ffe45c;
+    --gold-dim: #3a3418;
+    --white: #ffffff;
+    --card-bg: #ffffff;
+    --card-text: #1a1a2e;
+    --card-sub: #5a5f7a;
+    --google-blue: #4285F4;
+    --google-blue-dark: #3367d6;
+    --grey-inactive: #2a3560;
+    --grey-text: #8a93b8;
+    --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.18);
+    --shadow-card: 0 6px 28px rgba(0, 0, 0, 0.22);
+    --radius-lg: 20px;
+    --radius-md: 14px;
+    --radius-sm: 10px;
+  }
 
-  button { width: 100%; padding: 16px; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 15px; display: none; background: #4285F4; color: white; }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(160deg, var(--navy-deep) 0%, var(--navy) 40%, var(--navy-mid) 100%);
+    background-attachment: fixed;
+    color: var(--white);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* subtle radial glow behind content */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140%;
+    height: 70%;
+    background: radial-gradient(circle, rgba(66, 133, 244, 0.18) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ============================================================
+     BRAND HEADER
+     ============================================================ */
+  .brand {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: var(--gold-soft);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+  }
+
+  .brand-badge .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  .brand-title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    line-height: 1.15;
+  }
+
+  .brand-sub {
+    font-size: 14px;
+    color: var(--grey-text);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     SCREEN CONTAINERS
+     ============================================================ */
+  .screen {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.45s ease forwards;
+  }
+
+  .screen.active {
+    display: flex;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     SCREEN 1 — STAR RATING
+     ============================================================ */
+  .rating-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 36px 24px 32px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+  }
+
+  .rating-question {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--card-text);
+    letter-spacing: -0.4px;
+    line-height: 1.25;
+  }
+
+  .rating-hint {
+    font-size: 14px;
+    color: var(--card-sub);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  .stars-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+    margin-bottom: 8px;
+  }
+
+  .star {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 46px;
+    line-height: 1;
+    color: var(--grey-inactive);
+    transition: transform 0.15s ease, color 0.15s ease, filter 0.15s ease;
+    padding: 4px;
+    font-family: inherit;
+  }
+
+  .star:active {
+    transform: scale(0.88);
+  }
+
+  .star.lit {
+    color: var(--gold);
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.55));
+  }
+
+  .rating-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding: 0 6px;
+  }
+
+  .rating-labels span {
+    font-size: 11px;
+    color: var(--card-sub);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .rating-footnote {
+    margin-top: 26px;
+    font-size: 12px;
+    color: var(--card-sub);
+    line-height: 1.5;
+    opacity: 0.85;
+  }
+
+  /* ============================================================
+     SCREEN 2 — LOADING
+     ============================================================ */
+  .loader-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 54px 28px;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-card);
+  }
+
+  .loader-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--card-text);
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .loader-sparkle {
+    font-size: 22px;
+    animation: sparkleSpin 2s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes sparkleSpin {
+    0%   { transform: rotate(0deg) scale(1); opacity: 1; }
+    50%  { transform: rotate(180deg) scale(1.15); opacity: 0.85; }
+    100% { transform: rotate(360deg) scale(1); opacity: 1; }
+  }
+
+  .loader-sub {
+    font-size: 14px;
+    color: var(--card-sub);
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .loader-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 34px;
+  }
+
+  .loader-dots .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: pulseDot 1.2s ease-in-out infinite;
+  }
+
+  .loader-dots .dot:nth-child(2) { animation-delay: 0.18s; }
+  .loader-dots .dot:nth-child(3) { animation-delay: 0.36s; }
+
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(0.7); opacity: 0.4; box-shadow: 0 0 0 rgba(255,215,0,0); }
+    50%      { transform: scale(1.15); opacity: 1; box-shadow: 0 0 16px rgba(255,215,0,0.65); }
+  }
+
+  /* ============================================================
+     SCREEN 3 — REVIEW OPTIONS
+     ============================================================ */
+  .reviews-head {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .reviews-head h2 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    color: var(--white);
+  }
+
+  .reviews-head p {
+    font-size: 13px;
+    color: var(--grey-text);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .reviews-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .review-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-md);
+    padding: 18px 18px;
+    text-align: left;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+  }
+
+  .review-card:active {
+    transform: scale(0.985);
+  }
+
+  .review-card.selected {
+    border-color: var(--google-blue);
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.25), var(--shadow-soft);
+  }
+
+  .review-stars {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .review-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--google-blue);
+    background: rgba(66, 133, 244, 0.1);
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .review-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--card-text);
+    font-weight: 500;
+  }
+
+  .review-check {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--google-blue);
+    color: white;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.5);
+  }
+
+  .review-card.selected .review-check {
+    display: flex;
+  }
+
+  .reviews-actions {
+    width: 100%;
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--google-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 17px 20px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s ease, transform 0.12s ease, opacity 0.2s ease;
+    box-shadow: 0 6px 20px rgba(66, 133, 244, 0.4);
+  }
+
+  .btn-primary:hover {
+    background: var(--google-blue-dark);
+  }
+
+  .btn-primary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .btn-ghost {
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--grey-text);
+    border-radius: var(--radius-md);
+    padding: 13px 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    color: var(--white);
+  }
+
+  /* ============================================================
+     TOAST
+     ============================================================ */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: #1caf5a;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 13px 22px;
+    border-radius: 100px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ============================================================
+     FOOTER CREDIT
+     ============================================================ */
+  .credit {
+    margin-top: 30px;
+    font-size: 11px;
+    color: rgba(138, 147, 184, 0.55);
+    letter-spacing: 0.5px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ============================================================
+     RESPONSIVE TWEAKS
+     ============================================================ */
+  @media (max-width: 360px) {
+    .star { font-size: 40px; gap: 4px; }
+    .brand-title { font-size: 23px; }
+    .rating-question { font-size: 20px; }
+    .reviews-head h2 { font-size: 19px; }
+  }
+
+  @media (min-width: 480px) {
+    .star { font-size: 52px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <div id="rating-step">
-    <h1>How was your visit?</h1>
-    <p>Tap a star to rate your experience.</p>
-    <div class="stars" id="stars">
-      <span class="star" data-value="1">★</span>
-      <span class="star" data-value="2">★</span>
-      <span class="star" data-value="3">★</span>
-      <span class="star" data-value="4">★</span>
-      <span class="star" data-value="5">★</span>
-    </div>
-  </div>
+<div class="app">
 
-  <div id="options-area">
-    <h1 id="options-title" style="margin-bottom: 15px;">Select a review</h1>
-    <div id="review-list"></div>
-    <button class="btn-google" id="google-btn" onclick="goToGoogle()">Ready to Review →</button>
-  </div>
+  <!-- BRAND HEADER -->
+  <header class="brand">
+    <div class="brand-badge">
+      <span class="dot"></span>
+      VAAN AI
+    </div>
+    <h1 class="brand-title">Olive Hotel</h1>
+    <p class="brand-sub">Your feedback means the world to us</p>
+  </header>
+
+  <!-- ================= SCREEN 1 — RATING ================= -->
+  <section class="screen active" id="screen-rating">
+    <div class="rating-card">
+      <h2 class="rating-question">How was your visit?</h2>
+      <p class="rating-hint">Tap a star to rate your experience</p>
+
+      <div class="stars-row" id="stars-row">
+        <button class="star" data-value="1" aria-label="1 star">★</button>
+        <button class="star" data-value="2" aria-label="2 stars">★</button>
+        <button class="star" data-value="3" aria-label="3 stars">★</button>
+        <button class="star" data-value="4" aria-label="4 stars">★</button>
+        <button class="star" data-value="5" aria-label="5 stars">★</button>
+      </div>
+
+      <div class="rating-labels">
+        <span>Poor</span>
+        <span>Excellent</span>
+      </div>
+
+      <p class="rating-footnote">Takes 10 seconds • Powers up our team</p>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 2 — LOADING ================= -->
+  <section class="screen" id="screen-loading">
+    <div class="loader-card">
+      <div class="loader-title">
+        <span class="loader-sparkle">✨</span>
+        <span>VAAN AI is thinking...</span>
+      </div>
+      <p class="loader-sub">Crafting reviews just for you</p>
+      <div class="loader-dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCREEN 3 — REVIEWS ================= -->
+  <section class="screen" id="screen-reviews">
+    <div class="reviews-head">
+      <h2>Pick your review</h2>
+      <p>Tap one, then copy & post to Google</p>
+    </div>
+
+    <div class="reviews-list" id="reviews-list"></div>
+
+    <div class="reviews-actions">
+      <button class="btn-primary" id="btn-copy" disabled>
+        <span>Copy &amp; Go to Google</span>
+      </button>
+      <button class="btn-ghost" id="btn-restart">← Rate again</button>
+    </div>
+  </section>
+
+  <p class="credit">Powered by VAAN AI</p>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span>✓</span>
+  <span>Copied! Paste it on Google</span>
 </div>
 
 <script>
-  // --- CONFIGURATION ---
-  const GOOGLE_REVIEW_LINK = "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID"; 
+/* ============================================================
+   VAAN AI REVIEW GENERATOR — OLIVE HOTEL
+   Template Engine (no API, instant, free)
+   ============================================================ */
 
-  const REVIEW_OPTIONS = {
-    5: ["Excellent service! Truly a 5-star experience.", "Absolutely loved it here.", "Best experience I've had in a long time."],
-    4: ["Very good experience overall.", "Really enjoyed my visit.", "Good quality and nice atmosphere."],
-    3: ["It was okay. Nothing special.", "Average experience.", "Fair quality."],
-    2: ["Below average. The service was slow.", "Not the best experience.", "Expected much better."],
-    1: ["Very disappointed.", "Terrible service.", "Extremely unhappy."]
-  };
+/* ⚠️⚠️⚠️  REPLACE THIS WITH THE REAL GOOGLE REVIEW LINK  ⚠️⚠️⚠️ */
+const GOOGLE_REVIEW_LINK =
+  "https://search.google.com/local/writereview?placeid=YOUR_PLACE_ID";
 
-  const stars = document.querySelectorAll('.star');
-  let selectedRating = 0;
-  let selectedText = "";
+/* ------------------------------------------------------------
+   REVIEW DATABASE
+   Each tier: { large: [...], small: [...] }
+   Large = detailed, 12 per tier
+   Small = short punchy, 3 per tier
+   ------------------------------------------------------------ */
 
-  stars.forEach(star => {
-    star.addEventListener('click', function() {
-      selectedRating = parseInt(this.getAttribute('data-value'));
-      stars.forEach(s => s.classList.remove('active'));
-      for(let i = 0; i < selectedRating; i++) stars[i].classList.add('active');
-      setTimeout(() => showOptions(selectedRating), 300);
-    });
+const REVIEWS = {
+
+  /* ===================== 5 STARS ===================== */
+  5: {
+    large: [
+      "Absolutely phenomenal stay at Olive Hotel! The rooms were spotless, the staff went above and beyond, and the food at the in-house restaurant was genuinely top-notch. From check-in to check-out, everything felt smooth and premium. Highly recommend Olive Hotel to anyone visiting Karnal — this is the place to stay.",
+      "We booked Olive Hotel for a family function and the banquet team delivered beyond expectations. The hall was beautifully decorated, the catering was excellent, and the staff handled every detail with professionalism. Rooms were comfortable and clean. A big thank you to the entire Olive Hotel team for making our event memorable!",
+      "This was my third stay at Olive Hotel and they keep getting better. The rooms are spacious and well-maintained, the AC and Wi-Fi work perfectly, and the parking is hassle-free. What really stands out is the hospitality — every staff member greets you with a smile. Easily the best hotel experience in Karnal.",
+      "Outstanding hospitality from start to finish. The front desk team was warm and quick, the room was immaculately clean with fresh linens, and the restaurant served delicious food with generous portions. The location is convenient and the atmosphere is peaceful. Olive Hotel has earned a loyal customer in me.",
+      "I came for a business trip and Olive Hotel exceeded every expectation. Fast check-in, quiet room, reliable high-speed internet, and a great breakfast spread. The staff even arranged a last-minute meeting space for me without any fuss. Professional, polished, and genuinely welcoming — highly recommended for business travellers.",
+      "Booked Olive Hotel for my parents' anniversary dinner and the experience was flawless. The restaurant ambiance was elegant, the service was attentive, and the food was rich and flavorful. The manager personally checked in on us, which was a lovely touch. Thank you for a truly special evening — we'll be back!",
+      "The banquet hall at Olive Hotel is perfect for weddings and large gatherings. We hosted a 200-guest event and the team managed everything smoothly — decor, catering, seating, parking. Not a single complaint from our guests. The rooms were also comfortable for our out-of-town relatives. Five stars, well deserved.",
+      "Fantastic stay! The rooms are clean, modern, and spacious. The restaurant food is genuinely delicious — try the local specialties. Staff is polite and always ready to help. The hotel is well-maintained and feels premium without being overpriced. Olive Hotel is now my go-to spot in Karnal.",
+      "The best hotel experience I've had in Karnal, hands down. Great location, clean rooms, friendly staff, and excellent food. The banquet facility is a huge plus for family events. Special mention to the front desk team who made our check-in seamless after a long drive. Highly recommended to all travellers.",
+      "We stayed at Olive Hotel for a wedding in the family and it was a wonderful experience. The banquet hall was grand, the decorations were beautiful, and the food received compliments from every guest. The rooms were spotless and the staff was attentive throughout. Thank you, Olive Hotel, for making our celebration perfect!",
+      "Superb hospitality and attention to detail. The room was well-lit, spacious, and clean, with all amenities working perfectly. The in-house restaurant serves fresh, tasty food with excellent service. The location makes it easy to get around Karnal. This hotel genuinely cares about its guests — will definitely return.",
+      "A truly memorable stay. The staff at Olive Hotel treated us like family. Rooms were comfortable, the food was delicious, and the banquet facility is world-class. We hosted a small get-together and everything was handled with grace. Thank you for the wonderful experience — we can't wait to come back!"
+    ],
+    small: [
+      "Amazing service and great food! Olive Hotel is the real deal. Will definitely come back.",
+      "Bhai mast tha — rooms clean, food tasty, staff super polite. Olive Hotel zindabad!",
+      "Perfect stay, perfect food, perfect staff. Olive Hotel never disappoints. Highly recommend!"
+    ]
+  },
+
+  /* ===================== 4 STARS ===================== */
+  4: {
+    large: [
+      "Had a great experience overall at Olive Hotel. The banquet hall was well-decorated and the service was prompt. The food was delicious and the rooms were comfortable. Just a minor delay in room service during peak hours, otherwise everything was perfect. Would happily stay again.",
+      "Really enjoyed my stay at Olive Hotel. The rooms were clean and well-maintained, the staff was courteous, and the food at the restaurant was good. Wi-Fi could be a bit stronger in the rooms, but that's a small thing. Overall a solid choice for anyone visiting Karnal — recommended.",
+      "Nice hotel with a warm atmosphere. The check-in was smooth, the room was comfortable, and the restaurant food was tasty. Only feedback — the breakfast spread could have a few more options. Otherwise a very pleasant stay. The staff genuinely cares about guests.",
+      "Olive Hotel is a great option for family stays and events. We booked the banquet for a small celebration and the team was cooperative and professional. The food was well-prepared and the rooms were clean. Minor parking congestion on a busy evening, but the staff managed it. Good value overall.",
+      "Comfortable stay, friendly staff, and good food. The room was spacious and the AC worked well. The location is convenient. The only small improvement I'd suggest is faster room service during evening hours. Everything else was excellent — will recommend to friends and family.",
+      "Attended a wedding at the Olive Hotel banquet and was impressed by the arrangements. The hall looked beautiful, the catering was excellent, and the staff managed the crowd well. A slight delay in the dinner service, but nothing major. Rooms were neat and clean. Good experience overall.",
+      "Solid hotel experience. The rooms were clean, the staff was polite, and the food was good. The in-house restaurant has a nice ambiance. Would've loved a bit more variety in the breakfast menu, but that's a minor point. Would stay again on my next Karnal trip.",
+      "Booked Olive Hotel for a business stay and it served me well. Fast check-in, quiet room, good internet, and a tasty dinner. The only hiccup was a slight delay in getting my room ready, but the front desk handled it professionally. Overall a very good experience.",
+      "Pleasant stay with family. The rooms were comfortable and the staff was helpful throughout. The restaurant food was genuinely good — especially the local dishes. Parking was a bit tight on the weekend, but manageable. Would recommend Olive Hotel to others visiting Karnal.",
+      "Good stay overall. The banquet hall is impressive and the food was excellent. The rooms were clean and the staff was polite. Only improvement — the room service could be a little quicker during busy hours. Everything else exceeded expectations. Will return.",
+      "Enjoyed my visit to Olive Hotel. The staff was welcoming, the room was well-kept, and the restaurant food was satisfying. The hotel has a nice, calm atmosphere. Wi-Fi was slightly slow in the room but fine in the lobby. A reliable option for Karnal travellers.",
+      "Nice, clean hotel with good food and friendly service. We used the banquet hall for a family function and it was well-managed. A small delay with the food service, but the team made up for it with their hospitality. Would recommend Olive Hotel for events and stays."
+    ],
+    small: [
+      "Good stay, tasty food, polite staff. A few small things could be better, but overall recommended.",
+      "Comfortable rooms and great banquet hall. Food was excellent. Worth it.",
+      "Nice hotel, friendly team, good food. Minor delays here and there, but a solid experience."
+    ]
+  },
+
+  /* ===================== 3 STARS ===================== */
+  3: {
+    large: [
+      "Decent experience at Olive Hotel. The rooms were clean but felt a bit dated compared to expectations. The food was good and the staff was polite. Room service was slower than expected during the evening. With some upgrades to the rooms and faster service, this could easily be a 4-star experience.",
+      "The banquet hall at Olive Hotel is nice and the food was well-prepared. However, the coordination during our event could have been better — there were some delays with the food service and seating. The staff was courteous and tried their best. Overall an average experience that could improve with tighter event management.",
+      "Mixed feelings about my stay. The location is good and the staff was friendly, but the room had a slight maintenance issue that took a while to fix. The restaurant food was tasty. Breakfast spread was limited. If the management focuses on upkeep and menu variety, Olive Hotel can be much better.",
+      "The hotel is okay for a short stay. Rooms were clean and the bed was comfortable. The Wi-Fi was unreliable and the room service took longer than expected. The restaurant food was good though, and the staff was polite. With a few operational improvements, this place has real potential.",
+      "Average experience overall. The banquet hall was well-decorated and the food quality was good, but the service during the event felt rushed and uncoordinated at times. The rooms were clean and comfortable. Feedback to the team — please plan event staffing better during peak functions.",
+      "Stayed for one night. The room was fine, the food was decent, and the staff was polite. What could improve — faster check-in, better Wi-Fi, and a wider breakfast menu. The location is convenient. For the price, it's reasonable, but there's room for improvement.",
+      "The food at Olive Hotel's restaurant was genuinely good and the staff was warm. However, the room felt a little tired — the AC was noisy and the bathroom could use a refresh. With some maintenance and upgrades, this place could be great. Hoping the management takes feedback seriously.",
+      "Decent value for money. The rooms are basic but clean. The banquet facility is nice but the event coordination needs polish — we had a few hiccups with the food timing. The staff apologized and made efforts. Overall an average stay that could be improved with better planning.",
+      "The hotel has potential. Good location, polite staff, tasty food. But the room service was slow and the parking area was congested. The restaurant food stood out. If the team focuses on speed and upkeep, Olive Hotel could easily rise to 4+ stars.",
+      "Visited for a family function at the banquet hall. The food was excellent and the hall was well-decorated, but the coordination between the kitchen and the service team felt off — the food came out in uneven batches. The staff was apologetic and tried their best. Room facilities were average.",
+      "An okay stay. The staff was polite and the food was good. The room had some minor issues — a slow-draining sink and a slightly noisy AC. These are fixable. I'd suggest management do a round of room audits. Would give it another try after improvements.",
+      "The location and staff are the strong points of Olive Hotel. The food is good. But the overall experience felt average due to slow service and a slightly dated room. With better upkeep and faster service, this hotel can really shine. Wishing the team the best."
+    ],
+    small: [
+      "Okay stay. Food and staff were good, but service and rooms need some work.",
+      "Decent, but can be better. Good food, average rooms, slow service.",
+      "Mixed experience. Polite staff, good food, but improvements needed on upkeep."
+    ]
+  },
+
+  /* ===================== 2 STARS ===================== */
+  2: {
+    large: [
+      "Unfortunately the experience fell short of expectations. The room was not ready at check-in despite prior confirmation, and the AC was not cooling properly. The staff tried to help but the overall coordination felt off. The food at the restaurant was decent. Hoping the management takes these issues seriously — there is potential here.",
+      "Booked Olive Hotel for a family function and was disappointed with the event coordination. The food service started late, seating arrangements were not as agreed, and there was confusion between the staff. The banquet hall itself is nice, but the execution needs serious improvement. The staff was apologetic, but the damage was done.",
+      "The rooms were not up to the mark. The bathroom had maintenance issues and the Wi-Fi barely worked. Room service took over an hour for a simple order. The staff was courteous but clearly under-equipped. The food was the only saving grace. I hope the management invests in staff training and facility upkeep.",
+      "Not the experience I was hoping for. The check-in was slow, the room felt under-maintained, and the restaurant service was disorganized. The staff was polite and tried to help but it was clear the systems were not in place. For the price, expectations were higher. Constructive feedback — please focus on operations and quality control.",
+      "Disappointed with the stay. The room had cleanliness issues and the AC was noisy. The food was good but the service was extremely slow. The banquet hall looked nice but our event had several logistical hiccups. The staff apologized repeatedly but it did not solve the problem. Hoping for improvement.",
+      "The hotel has potential but the execution fell short. Check-in was messy, room service was slow, and the Wi-Fi kept dropping. The food at the restaurant was actually good — credit where due. Management should focus on staff training, system upgrades, and facility maintenance. Would like to see improvement before recommending.",
+      "Our banquet event at Olive Hotel had several issues — the food was delayed, the staff seemed underprepared, and the coordination between teams was poor. The hall itself is well-decorated and has good potential. The management really needs to tighten event operations. The staff was polite but politeness alone doesn't fix the experience.",
+      "Average food, but everything else was below expectations. The room felt dated, the bathroom had a leak, and the AC made noise all night. Room service was unreasonably slow. The staff tried to help but the hotel clearly needs maintenance and better processes. A bit disappointing for the price paid.",
+      "Not a great experience. The room was not as clean as it should have been, the Wi-Fi was unreliable, and the restaurant took forever to serve food. The staff was polite, which is the only reason this isn't a 1-star. I genuinely hope the management takes feedback seriously — this place could be much better.",
+      "Felt let down by the overall experience. The event coordination was messy, the food timing was off, and the room service was slow. The staff was apologetic and did their best under the circumstances. Management needs to invest in staff training and quality control. Hoping to see improvements.",
+      "The location is good and the food has potential, but the overall service and facility upkeep were disappointing. The room needed maintenance, room service was slow, and the Wi-Fi kept dropping. Feedback to management — please prioritize guest experience, not just occupancy. Constructive criticism from a paying guest.",
+      "Wanted to like this place — nice building, polite staff — but the execution was weak. Slow check-in, a room that needed maintenance, and food service that took too long. The staff was clearly overworked. Management needs to address staffing and upkeep. Hoping to see improvement on my next visit."
+    ],
+    small: [
+      "Disappointing. Polite staff but slow service and rooms need upkeep. Expected better.",
+      "Not great. Food was okay, but rooms and service fell short. Needs improvement.",
+      "Below expectations. Staff tried but the systems and upkeep were lacking."
+    ]
+  },
+
+  /* ===================== 1 STAR ===================== */
+  1: {
+    large: [
+      "Very disappointing experience. The room was not clean, the AC was not working, and the staff seemed overwhelmed. Room service took over an hour. I had to escalate multiple times. The food was okay, but overall this was not the experience I expected from Olive Hotel. I hope management takes this seriously and fixes these issues.",
+      "Our event at the banquet hall was poorly coordinated. The food was late, the seating was not as agreed, and the staff seemed underprepared. Multiple guests complained. The hall itself is nice but the execution was a letdown. I would not recommend booking an event here without major improvements to event management.",
+      "Extremely poor experience. The room was dirty, the bathroom had maintenance issues, and the Wi-Fi didn't work at all. Room service was painfully slow. The staff was polite but clearly overworked. For the price, this was unacceptable. Management needs to seriously review operations and staff training.",
+      "Booked a stay after reading good reviews, but my experience was completely different. The room was not ready, the AC was noisy, and the food took forever to arrive. When I raised concerns, they were not addressed properly. Very disappointed. Hoping the management takes guest feedback seriously.",
+      "The worst stay I've had in Karnal. The room was unclean, the linens were not fresh, and the service was extremely slow. The front desk did not respond to my complaints. The food at the restaurant was the only saving grace. I would not recommend Olive Hotel in its current state. Serious improvements needed.",
+      "Very bad experience. Our banquet event had several problems — food delays, poor coordination, and staff that seemed untrained for event management. Our guests were unhappy and so were we. The management needs to invest in training and process. I cannot recommend this venue for events until these issues are fixed.",
+      "Poor experience overall. The check-in was extremely slow, the room was not clean, and the AC kept making noise. Room service took over 90 minutes. The staff was polite but clearly helpless. Management needs to address staffing and quality control urgently. Not the experience I expected.",
+      "Disappointed at every level. The room had cleanliness issues, the bathroom had a leak, and the Wi-Fi was nonexistent. When I complained, I was given excuses rather than solutions. The food was decent but that was it. I genuinely hope the management fixes these problems — this hotel has potential but the current state is far from acceptable.",
+      "Not recommended in its current state. The room was not maintained, the service was slow, and the event coordination for our function was poor. Guests complained about food timing and seating. The staff was apologetic but the problems kept piling up. Management needs to act on feedback seriously.",
+      "Extremely disappointing. The room was unclean, the AC was not functioning properly, and the food took over an hour to arrive. When I escalated, there was no proper response from the management. The staff tried their best but the systems are clearly broken. Hoping to see major improvements soon.",
+      "Terrible experience with the banquet team. Our event had food delays, staff confusion, and poor coordination. The hall is nice but the execution was unacceptable. Our guests were upset and so were we. I would strongly advise better event planning and staffing before booking here. Genuine feedback — please improve.",
+      "One of the poorest hotel experiences I've had. Rooms were not clean, service was extremely slow, and complaints were not addressed. The food was okay but that does not make up for the overall experience. Management seriously needs to review operations and staff training. Hoping to see changes."
+    ],
+    small: [
+      "Very disappointed. Poor cleanliness, slow service, and no proper response to complaints.",
+      "Not acceptable at this price. Rooms and service need serious improvement.",
+      "Bad experience. Polite staff but the management and upkeep are lacking."
+    ]
+  }
+};
+
+/* ------------------------------------------------------------
+   STATE
+   ------------------------------------------------------------ */
+let selectedRating = 0;
+let selectedReviewText = "";
+let selectedCardEl = null;
+
+/* ------------------------------------------------------------
+   DOM REFS
+   ------------------------------------------------------------ */
+const starsRow     = document.getElementById("stars-row");
+const stars        = document.querySelectorAll(".star");
+const screenRating = document.getElementById("screen-rating");
+const screenLoad   = document.getElementById("screen-loading");
+const screenRevs   = document.getElementById("screen-reviews");
+const reviewsList  = document.getElementById("reviews-list");
+const btnCopy      = document.getElementById("btn-copy");
+const btnRestart   = document.getElementById("btn-restart");
+const toast        = document.getElementById("toast");
+
+/* ------------------------------------------------------------
+   UTILITIES
+   ------------------------------------------------------------ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(target) {
+  [screenRating, screenLoad, screenRevs].forEach((s) => s.classList.remove("active"));
+  target.classList.add("active");
+}
+
+function showToast(message = "Copied! Paste it on Google") {
+  toast.querySelector("span:last-child").textContent = message;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2400);
+}
+
+/* ------------------------------------------------------------
+   STAR INTERACTION
+   ------------------------------------------------------------ */
+starsRow.addEventListener("click", (e) => {
+  const btn = e.target.closest(".star");
+  if (!btn) return;
+  const value = parseInt(btn.dataset.value, 10);
+  selectedRating = value;
+
+  // light up stars up to the selected one
+  stars.forEach((s) => {
+    const v = parseInt(s.dataset.value, 10);
+    s.classList.toggle("lit", v <= value);
   });
 
-  function showOptions(rating) {
-    document.getElementById('rating-step').style.display = 'none';
-    document.getElementById('options-area').style.display = 'block';
-    const listContainer = document.getElementById('review-list');
-    listContainer.innerHTML = "";
-    const options = REVIEW_OPTIONS[rating] || [];
-    options.forEach(text => {
-      const div = document.createElement('div');
-      div.className = 'option-box';
-      div.innerText = text;
-      div.onclick = () => selectOption(div, text);
-      listContainer.appendChild(div);
-    });
+  // tiny delay so the user sees the stars light up before the loader
+  setTimeout(() => {
+    showScreen(screenLoad);
+    setTimeout(() => {
+      renderReviews(selectedRating);
+      showScreen(screenRevs);
+    }, 1500);
+  }, 180);
+});
+
+/* ------------------------------------------------------------
+   RENDER REVIEW CARDS
+   ------------------------------------------------------------ */
+function renderReviews(rating) {
+  const tier = REVIEWS[rating];
+  if (!tier) return;
+
+  // Build a pool: all large + all small
+  const pool = [...tier.large.map((t) => ({ text: t, type: "large" })),
+                ...tier.small.map((t) => ({ text: t, type: "small" }))];
+
+  // Shuffle and pick 4-5
+  const shuffled = shuffle(pool);
+  const count = Math.random() < 0.5 ? 4 : 5;
+  const picked = shuffled.slice(0, count);
+
+  // Reset state
+  selectedReviewText = "";
+  selectedCardEl = null;
+  btnCopy.disabled = true;
+
+  // Build DOM
+  reviewsList.innerHTML = "";
+  picked.forEach((item) => {
+    const card = document.createElement("div");
+    card.className = "review-card";
+    card.dataset.text = item.text;
+
+    const starsStr = "★".repeat(rating) + "☆".repeat(5 - rating);
+
+    card.innerHTML = `
+      <div class="review-check">✓</div>
+      <div class="review-stars">
+        <span>${starsStr}</span>
+        <span class="review-badge">${item.type === "small" ? "Short" : "Detailed"}</span>
+      </div>
+      <p class="review-text">${item.text}</p>
+    `;
+
+    card.addEventListener("click", () => selectReview(card, item.text));
+    reviewsList.appendChild(card);
+  });
+
+  // scroll to top of reviews
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ------------------------------------------------------------
+   SELECT A REVIEW
+   ------------------------------------------------------------ */
+function selectReview(card, text) {
+  // deselect previous
+  if (selectedCardEl) selectedCardEl.classList.remove("selected");
+
+  selectedCardEl = card;
+  selectedReviewText = text;
+  card.classList.add("selected");
+  btnCopy.disabled = false;
+}
+
+/* ------------------------------------------------------------
+   COPY + REDIRECT
+   ------------------------------------------------------------ */
+btnCopy.addEventListener("click", async () => {
+  if (!selectedReviewText) return;
+
+  try {
+    await navigator.clipboard.writeText(selectedReviewText);
+    showToast("Copied! Paste it on Google");
+  } catch (err) {
+    // fallback for older browsers
+    const ta = document.createElement("textarea");
+    ta.value = selectedReviewText;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand("copy");
+      showToast("Copied! Paste it on Google");
+    } catch (e) {
+      showToast("Copy failed — please select manually");
+    }
+    document.body.removeChild(ta);
   }
 
-  function selectOption(element, text) {
-    document.querySelectorAll('.option-box').forEach(box => box.classList.remove('selected'));
-    element.classList.add('selected');
-    selectedText = text;
-    document.getElementById('google-btn').style.display = 'block';
-  }
+  // redirect after a short beat so the toast is visible
+  setTimeout(() => {
+    window.location.href = GOOGLE_REVIEW_LINK;
+  }, 900);
+});
 
-  function goToGoogle() {
-    if(!selectedText) return;
-    
-    // Auto-copy to clipboard
-    navigator.clipboard.writeText(selectedText).then(() => {
-      // The Magic Attempt: We try to pass the text via URL (Google will ignore this)
-      const finalUrl = GOOGLE_REVIEW_LINK + "&text=" + encodeURIComponent(selectedText);
-      
-      // To the customer, it looks like it's loading and taking them there
-      document.getElementById('google-btn').innerText = "Opening Google...";
-      
-      setTimeout(() => {
-        window.location.href = finalUrl;
-      }, 500);
-    });
-  }
+/* ------------------------------------------------------------
+   RESTART
+   ------------------------------------------------------------ */
+btnRestart.addEventListener("click", () => {
+  selectedRating = 0;
+  selectedReviewText = "";
+  selectedCardEl = null;
+  btnCopy.disabled = true;
+  stars.forEach((s) => s.classList.remove("lit"));
+  showScreen(screenRating);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* ------------------------------------------------------------
+   INIT
+   ------------------------------------------------------------ */
+console.log("%c VAAN AI — Olive Hotel Review Generator ready ",
+  "background:#4285F4;color:#fff;padding:4px 10px;border-radius:6px;font-weight:bold");
 </script>
 
 </body>
